@@ -15,9 +15,12 @@
     "@mui/icons-material": "latest",
     "@mui/material": "latest",
     "@mui/material-nextjs": "latest",
+    "fs": "^0.0.1-security",
+    "mysql2": "^3.15.3",
     "next": "^15.0.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "sequelize": "^6.37.7"
   },
   "devDependencies": {
     "@types/node": "latest",
