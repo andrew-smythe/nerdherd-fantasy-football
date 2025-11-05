@@ -107,11 +107,11 @@ export default async function DraftDraft() {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell>Position</TableCell>
+                            <TableCell sx={{ width: "10%"}}>Position</TableCell>
                             <TableCell>Team</TableCell>
-                            <TableCell>Points For</TableCell>
-                            <TableCell>Points Against</TableCell>
-                            <TableCell>Total</TableCell>
+                            <TableCell sx={{ width: "10%"}}>Points For</TableCell>
+                            <TableCell sx={{ width: "10%"}}>Points Against</TableCell>
+                            <TableCell sx={{ width: "10%"}}>Total</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>

@@ -1,8 +1,8 @@
-import { connect } from '@/db/utils/connect';
 import PlayerStats from '@/classes/PlayerStats';
+import LeagueSettings from '@/classes/LeagueSettings';
 const { Op } = require('sequelize');
 
-export default class Matchup {
+export default class MatchupStats {
     opponentId: number;
     week: number;
     playerStats: PlayerStats[];
@@ -13,19 +13,8 @@ export default class Matchup {
         this.playerStats = [];
     }
 
-    static async fetch(db, teamId: number, week: number, opponentId: number) : Promise<Matchup> {
-        let matchup = new Matchup(week, opponentId);
-
-        const rawStats = await db.weeklyplayerstats.findAll({
-            where: {
-                teamId: {
-                    [Op.eq]: teamId,
-                },
-                week: {
-                    [Op.eq]: week,
-                },
-            }
-        });
+    static async fetch(rawStats, teamId: number, week: number, opponentId: number) : Promise<MatchupStats> {
+        let matchup = new MatchupStats(week, opponentId);
 
         for (let s of rawStats) {
             matchup.playerStats.push(new PlayerStats(
@@ -62,5 +51,16 @@ export default class Matchup {
         }
 
         return matchup;
+    }
+
+    totalPoints() : number {
+        let total = 0;
+        this.playerStats.forEach(p => {
+            if (p.rosterPositionId !== 8) {
+                total += p.totalPoints;
+            }
+        });
+
+        return total;
     }
 }

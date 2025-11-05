@@ -1,6 +1,4 @@
-import { connect } from '@/db/utils/connect';
-import Matchup from '@/classes/Matchup';
-const { Op } = require('sequelize');
+import MatchupStats from '@/classes/MatchupStats';
 
 export default class Team {
     id: number;
@@ -8,7 +6,7 @@ export default class Team {
     year: number;
     nflId: number;
     sleeperId: number;
-    weeks: Matchup[];
+    weeks: MatchupStats[];
 
     constructor(id: number, name: string, year: number, nflId: number, sleeperId: number) {
         this.id = id;
@@ -24,16 +22,25 @@ export default class Team {
 
         const rawMatchups = await db.matchups.findAll({
             where: {
-                teamId: {
-                    [Op.eq]: id,
-                }
+                teamId: id,
+            }
+        });
+
+        const rawPlayerStats = await db.weeklyplayerstats.findAll({
+            where: {
+                teamId: id,
             }
         });
 
         for (let m of rawMatchups) {
-            team.weeks.push(await Matchup.fetch(db, id, m.week, m.opponentId));
+            let playerStats = rawPlayerStats.filter(p => p.week == m.week);
+            team.weeks.push(await MatchupStats.fetch(playerStats, id, m.week, m.opponentId));
         }
 
         return team;
+    }
+
+    async getMatchupDataByWeek(week: number) : Promise<MatchupStats | undefined> {
+        return this.weeks.find(w => w.week === week);
     }
 }

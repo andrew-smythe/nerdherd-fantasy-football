@@ -1,25 +1,30 @@
 import { connect } from '@/db/utils/connect';
 import Team from '@/classes/Team';
-const { Op } = require('sequelize');
 
 export default class User {
     id: number;
     teams: Team[];
+    name: string;
 
-    constructor(id : number) {
+    constructor(id : number, name: string) {
         this.id = id;
+        this.name = name;
         this.teams = [];
     }
 
-    static async fetch(id: number) : Promise<User> {
-        let user = new User(id);
+    static async fetchByUserId(id: number) : Promise<User | undefined> {
         const db = connect();
+
+        const userData = await db.users.findByPk(id);
+        if (!userData) {
+            console.error('Could not find User data for ID ' + id);
+            return undefined;
+        }
+        let user = new User(id, userData.username);
 
         const rawTeams = await db.teams.findAll({
             where: {
-                userId: {
-                    [Op.eq]: id,
-                }
+                userId: id,
             },
         });
 
@@ -28,5 +33,21 @@ export default class User {
         }
 
         return user;
+    }
+
+    static async fetchByTeamId(id: number) : Promise<User | undefined> {
+        const db = connect();
+
+        const rawTeamData = await db.teams.findByPk(id);
+        if (!rawTeamData) {
+            console.error('Could not find Team data for ID ' + id);
+            return undefined;
+        }
+
+        return User.fetchByUserId(rawTeamData.userId);
+    }
+
+    async getTeamByYear(year: number) : Promise<Team | undefined> {
+        return this.teams.find(t => t.year === year);
     }
 }
