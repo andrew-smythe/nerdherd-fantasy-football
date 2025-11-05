@@ -1,17 +1,8 @@
-# Material UI - Next.js App Router example in TypeScript
+# Nerdherd Fantasy Football
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped using [`create-next-app`](https://github.com/vercel/next.js/tree/HEAD/packages/create-next-app) with Material UI installed.
 
 ## How to use
-
-Download the example [or clone the repo](https://github.com/mui/material-ui):
-
-<!-- #target-branch-reference -->
-
-```bash
-curl https://codeload.github.com/mui/material-ui/tar.gz/master | tar -xz --strip=2  material-ui-master/examples/material-ui-nextjs-ts
-cd material-ui-nextjs-ts
-```
 
 Install it and run:
 
@@ -22,26 +13,10 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-or:
+## What is this?
 
-<!-- #target-branch-reference -->
+This is a personal project meant for catalog the history of the Nerdherd Fantasy Football league - a fantasy football league of friends that dates back to 2010. It has been hosted on both NFL.com and Sleeper, and this project represents a means of showcasing the league's history all in one spot.
 
-[![Edit on StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/mui/material-ui/tree/master/examples/material-ui-nextjs-ts)
+###
 
-[![Edit on CodeSandbox](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/p/sandbox/github/mui/material-ui/tree/master/examples/material-ui-nextjs-ts)
-
-## Learn more
-
-To learn more about this example:
-
-<!-- #host-reference -->
-
-- [Next.js documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Customizing Material UI](https://mui.com/material-ui/customization/how-to-customize/) - approaches to customizing Material UI.
-
-## What's next?
-
-<!-- #host-reference -->
-
-You now have a working example project.
-You can head back to the documentation and continue by browsing the [templates](https://mui.com/material-ui/getting-started/templates/) section.
+Go to https://www.andrewsmythe.com to test the most recent (hopefully) stable build.
