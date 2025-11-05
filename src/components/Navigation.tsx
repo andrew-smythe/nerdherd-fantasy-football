@@ -7,6 +7,7 @@ import FootballIcon from '@mui/icons-material/SportsFootball';
 import InfoIcon from '@mui/icons-material/Info';
 import FightIcon from '@mui/icons-material/SportsMma';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
+import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import ListButtonLink from '@/components/ListButtonLink';
 import { 
     AppBar, Box, Divider, Drawer, IconButton, List, ListItem, ListItemButton, 
@@ -57,6 +58,11 @@ export default function Navigation() {
             to: "/records",
         },
         {
+            text: "Draft Draft Order",
+            icon: <FormatListNumberedIcon />,
+            to: "/draftdraft",
+        },
+        {
             text: "About",
             icon: <InfoIcon />,
             to: "/about",
@@ -64,7 +70,7 @@ export default function Navigation() {
 
     ];
 
-    const navList = [];
+    const navList: any = [];
     
     for (let i in navigation) {
         navList.push(
