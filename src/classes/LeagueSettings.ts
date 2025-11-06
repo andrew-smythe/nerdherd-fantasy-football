@@ -1,5 +1,6 @@
 import { connect } from '@/db/utils/connect';
 const { Op } = require('sequelize');
+const Sequelize = require('sequelize');
 
 export default class LeagueSettings {
     readonly numRegSeasonWeeks : number;
@@ -35,15 +36,24 @@ export default class LeagueSettings {
             return undefined;
         }
 
-        const dbRosterPositions = await db.rosterpositions.findAll();
+        const dbRosterPositions = await db.leaguesettingspositions.findAll({
+            where: {
+                year: year
+            },
+            include: [{
+                model: db.rosterpositions,
+                as: 'rosterPosition',
+            }],
+            order: [[Sequelize.col('rosterPosition.order')]],
+        });
+        
         const rosterPositions = dbRosterPositions.map(rp => {
-            let position = '';
-            if (rp.position === 'R/W/T') position = 'FLEX';
-            else position = rp.position;
-
+            let position = rp.rosterPosition.position;
+            if (position === 'R/W/T') position = 'FLEX';
             return {
-                id: rp.id,
+                rosterPositionId: rp.rosterPositionId,
                 position: position,
+                numSlots: rp.numSlots,
             }
         });
 

@@ -10,7 +10,11 @@ module.exports = function(sequelize, DataTypes) {
     position: {
       type: DataTypes.STRING(45),
       allowNull: true
-    }
+    },
+    order: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
   }, {
     sequelize,
     tableName: 'rosterpositions',

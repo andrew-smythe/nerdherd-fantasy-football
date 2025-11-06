@@ -10,10 +10,10 @@ function PlayerData({ teamName, userName, points, reverse }) {
     if (reverse) {
         return (
             <>
-                <Grid size={{ xs: 2 }}>
+                <Grid size={{ lg: 2, xs: 5 }}>
                     <Text variant="h3">{ points.toFixed(2) }</Text>
                 </Grid>
-                <Grid size={{ xs: 6 }}>
+                <Grid size={{ lg: 10, xs: 7 }}>
                     <Text variant="h4" sx={{ textAlign: 'right' }}>{ teamName }</Text>
                     <Text variant="subtitle1" sx={{ color: 'text.secondary', textAlign: 'right' }}>{ userName }</Text>
                 </Grid>
@@ -23,11 +23,11 @@ function PlayerData({ teamName, userName, points, reverse }) {
     else {
         return (
             <>
-                <Grid size={{ xs: 6}}>
+                <Grid size={{ lg: 10, xs: 7 }}>
                     <Text variant="h4">{ teamName }</Text>
                     <Text variant="subtitle1" sx={{ color: 'text.secondary' }}>{ userName }</Text>
                 </Grid>
-                <Grid size={{ xs: 2}}>
+                <Grid size={{ lg: 2, xs: 5 }}>
                     <Text variant="h3" sx={{ textAlign: 'right' }}>{ points.toFixed(2) }</Text>
                 </Grid>
             </>
@@ -35,15 +35,18 @@ function PlayerData({ teamName, userName, points, reverse }) {
     }
 }
 
-function PositionScores({ positions, reverse }) {
+function PositionScores({ positions, positionSlots, reverse }) {
     const positionScores: Array<any> = [];
-    console.log('POSITIONS', positions);
-    for (let i in positions) {
+    for (let i in positionSlots) {
+        let points = 0;
+        if (positions[i]) {
+            points = positions[i].points;
+        }
         positionScores.push(
-            <Grid size={0.8} key={i}>
+            <Grid size={12 / positionSlots.length} key={i}>
                 <Paper sx={{ padding: '2px' }} elevation={3}>
-                    <Text variant="body1" sx={{ textAlign: 'center', fontSize: 13, fontWeight: 'bold' }}>{ positions[i].position }</Text>
-                    <Text variant="body2" sx={{ textAlign: 'center', fontSize: 13 }}>{ positions[i].points }</Text>
+                    <Text variant="body1" sx={{ textAlign: 'center', fontSize: 13, fontWeight: 'bold' }}>{ positionSlots[i].position }</Text>
+                    <Text variant="body2" sx={{ textAlign: 'center', fontSize: 13 }}>{ points.toFixed(2) }</Text>
                 </Paper>
             </Grid>
         );
@@ -51,22 +54,18 @@ function PositionScores({ positions, reverse }) {
     
     if (reverse) {
         return (
-            <Grid container spacing={1} sx={{ justifyContent: 'flex-start' }}>
+            <Grid container spacing={0.5} sx={{ justifyContent: 'flex-start' }}>
                 { positionScores }
             </Grid>
         )
     }
     else {
         return (
-            <Grid container spacing={1} sx={{ justifyContent: 'flex-end' }}>
+            <Grid container spacing={0.5} sx={{ justifyContent: 'flex-end' }}>
                 { positionScores }
             </Grid>
         )
     }
-}
-
-function PositionScore({ position }) {
-
 }
 
 export default function PlayerHeader({
@@ -75,7 +74,8 @@ export default function PlayerHeader({
         username,
         totalPoints,
         reverse = false,
-        positions,    
+        positions,
+        positionSlots,
 }) {
     return (
         <Grid size={{ xs: 12, md: 6 }}>
@@ -84,7 +84,7 @@ export default function PlayerHeader({
                     <Grid container sx={{ justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
                         <PlayerData teamName={team} userName={username} points={totalPoints} reverse={reverse}></PlayerData>
                     </Grid>
-                    <PositionScores positions={positions} reverse={reverse}></PositionScores>
+                    <PositionScores positions={positions} positionSlots={positionSlots} reverse={reverse}></PositionScores>
                 </CardContent>
             </Paper>
         </Grid>
