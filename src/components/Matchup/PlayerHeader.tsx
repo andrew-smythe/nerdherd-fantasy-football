@@ -1,5 +1,7 @@
 'use client';
 import * as React from 'react';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
@@ -36,6 +38,8 @@ function PlayerData({ teamName, userName, points, reverse }) {
 }
 
 function PositionScores({ positions, positionSlots, reverse }) {
+    const theme = useTheme();
+    const fontSize = useMediaQuery(theme.breakpoints.up('sm')) ? 13 : 11;
     const positionScores: Array<any> = [];
     for (let i in positionSlots) {
         let points = 0;
@@ -45,8 +49,8 @@ function PositionScores({ positions, positionSlots, reverse }) {
         positionScores.push(
             <Grid size={12 / positionSlots.length} key={i}>
                 <Paper sx={{ padding: '2px' }} elevation={3}>
-                    <Text variant="body1" sx={{ textAlign: 'center', fontSize: 13, fontWeight: 'bold' }}>{ positionSlots[i].position }</Text>
-                    <Text variant="body2" sx={{ textAlign: 'center', fontSize: 13 }}>{ points.toFixed(2) }</Text>
+                    <Text variant="body1" sx={{ textAlign: 'center', fontSize: fontSize, fontWeight: 'bold' }}>{ positionSlots[i].position }</Text>
+                    <Text variant="body2" sx={{ textAlign: 'center', fontSize: fontSize }}>{ points.toFixed(2) }</Text>
                 </Paper>
             </Grid>
         );
