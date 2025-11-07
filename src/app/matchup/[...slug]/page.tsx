@@ -181,7 +181,7 @@ export default async function Page({
         );
     }
     catch(e: unknown) {
-        if (e instanceof SyntaxError) {
+        if (e instanceof Error) {
             console.error(e.message);
             return (
                 <div>ERROR - { e.message }</div>
