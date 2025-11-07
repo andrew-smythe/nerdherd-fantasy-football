@@ -1,12 +1,9 @@
 import User from '@/classes/User';
 import LeagueSettings from '@/classes/LeagueSettings';
 import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import Text from '@mui/material/Typography';
-import MatchupStats from '@/classes/MatchupStats';
 import PlayerStats from '@/classes/PlayerStats';
 import PlayerHeader from '@/components/Matchup/PlayerHeader';
 import PositionRow from '@/components/Matchup/PositionRow';
@@ -140,12 +137,24 @@ export default async function Page({
                         reverse
                     ></PlayerHeader>
                 </Grid>
+                <Text variant="subtitle2" sx={{ textAlign: "center" }}>Starters</Text>
                 <Grid container spacing={1} alignItems="center">
                     {
                         positionSlots.map((slot, i) => (
                             // NextJS gets unhappy when we pass complex objects to client components. To work around this,
                             // we shallow copy the complex PlayerStats object with JSON.parse(JSON.stringify(obj)) 
                             <PositionRow position={slot.position} playerStats={JSON.parse(JSON.stringify(starters[i]))} opponentPlayerStats={JSON.parse(JSON.stringify(opponentStarters[i]))} key={slot.position + i}></PositionRow>
+                        ))
+                    }
+                </Grid>
+                <Divider sx={{ my: 2 }} />
+                <Text variant="subtitle2" sx={{ textAlign: "center" }}>Bench</Text>
+                <Grid container spacing={1} alignItems="center">
+                    {
+                        benchSlots.map((slot, i) => (
+                            // NextJS gets unhappy when we pass complex objects to client components. To work around this,
+                            // we shallow copy the complex PlayerStats object with JSON.parse(JSON.stringify(obj))
+                            <PositionRow position={slot.position} playerStats={JSON.parse(JSON.stringify(bench[i]))} opponentPlayerStats={JSON.parse(JSON.stringify(opponentBench[i]))} key={slot.position + i}></PositionRow>
                         ))
                     }
                 </Grid>
