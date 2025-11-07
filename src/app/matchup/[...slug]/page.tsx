@@ -2,11 +2,18 @@ import User from '@/classes/User';
 import LeagueSettings from '@/classes/LeagueSettings';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Grid from '@mui/material/Grid';
 import Text from '@mui/material/Typography';
 import PlayerStats from '@/classes/PlayerStats';
 import PlayerHeader from '@/components/Matchup/PlayerHeader';
 import PositionRow from '@/components/Matchup/PositionRow';
+import { connect } from '@/db/utils/connect';
+import { useRouter } from 'next/navigation';
+import MatchupOptions from '@/components/Matchup/MatchupOptions';
 
 function getPositionPoints(playerStats: any[], settings: LeagueSettings) {
     let ret = playerStats
@@ -80,6 +87,11 @@ export default async function Page({
         const week = parseInt(slug[2]);
         if (isNaN(userId) || isNaN(year) || isNaN(week)) throw new Error("INCORRECT PARAM FORMATTING");
 
+        const db = connect();
+
+        const settings = await LeagueSettings.loadYear(year);
+        if (!settings) throw new Error("COULD NOT LOAD LEAGUE SETTINGS FOR YEAR " + year);
+
         const user = await User.fetchByUserId(userId);
         if (!user) throw new Error("COULD NOT FIND USER");
 
@@ -88,6 +100,9 @@ export default async function Page({
 
         const matchupData = await team.getMatchupDataByWeek(week);
         if (!matchupData) throw new Error("COULD NOT FIND MATCHUP FOR WEEK " + week);
+
+        const record = await team.getRecordAtWeek(week, settings, db);
+        if (!record) throw new Error("COULD NOT FIND RECORD AT WEEK " + week);
 
         const opponentUser = await User.fetchByTeamId(matchupData.opponentId);
         if (!opponentUser) throw new Error("COULD NOT FIND OPPONENT USER");
@@ -98,11 +113,11 @@ export default async function Page({
         const opponentMatchupData = await opponentTeam.getMatchupDataByWeek(week);
         if (!opponentMatchupData) throw new Error("COULD NOT FIND OPPONENT MATCHUP FOR WEEK " + week);
 
+        const opponentRecord = await opponentTeam.getRecordAtWeek(week, settings, db);
+        if (!opponentRecord) throw new Error("COULD NOT FIND OPPONENT RECORD AT WEEK " + week);
+
         let totalPoints = matchupData.totalPoints();
         let opponentTotalPoints = opponentMatchupData.totalPoints();
-
-        const settings = await LeagueSettings.loadYear(year);
-        if (!settings) throw new Error("COULD NOT LOAD LEAGUE SETTINGS FOR YEAR " + year);
 
         const positionPoints: any = getPositionPoints(matchupData.playerStats, settings);
         const opponentPositionPoints: any = getPositionPoints(opponentMatchupData.playerStats, settings);
@@ -116,11 +131,15 @@ export default async function Page({
         const opponentStarters = getSlottedPlayers(opponentMatchupData.playerStats.filter(ps => ps.rosterPositionId !== 8), positionSlots);
         const opponentBench = getSlottedPlayers(opponentMatchupData.playerStats.filter(ps => ps.rosterPositionId === 8), benchSlots);
 
+        const numWeeks = settings.numRegSeasonWeeks + settings.numPlayoffWeeks;
+        const users = await User.fetchAllUsers();
+
         return (
             <Box sx={{ flexGrow: 1 }}>
+                <MatchupOptions userId={userId} users={users} year={year} week={week} numWeeks={numWeeks} minYear={2010} maxYear={2024}></MatchupOptions>
                 <Grid container spacing={2} sx={{ mb: 2 }}>
                     <PlayerHeader
-                        record={"6-2"}
+                        record={record}
                         team={team.name}
                         username={user.name}
                         totalPoints={totalPoints}
@@ -128,7 +147,7 @@ export default async function Page({
                         positionSlots={positionSlots}
                     ></PlayerHeader>
                     <PlayerHeader
-                        record={"3-5"}
+                        record={opponentRecord}
                         team={opponentTeam.name}
                         username={opponentUser.name}
                         totalPoints={opponentTotalPoints}
@@ -147,7 +166,7 @@ export default async function Page({
                         ))
                     }
                 </Grid>
-                <Divider sx={{ my: 2 }} />
+                <Divider sx={{ mb: 2, mt: 4 }} />
                 <Text variant="subtitle2" sx={{ textAlign: "center" }}>Bench</Text>
                 <Grid container spacing={1} alignItems="center">
                     {

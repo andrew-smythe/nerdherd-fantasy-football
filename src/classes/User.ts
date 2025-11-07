@@ -47,6 +47,16 @@ export default class User {
         return User.fetchByUserId(rawTeamData.userId);
     }
 
+    static async fetchAllUsers() : Promise<{ id: number, name: string }[]> {
+        const db = connect();
+
+        const rawUsersData = await db.users.findAll();
+        return rawUsersData.map(ud => ({
+            id: ud.id,
+            name: ud.username,
+        }));
+    }
+
     async getTeamByYear(year: number) : Promise<Team | undefined> {
         return this.teams.find(t => t.year === year);
     }

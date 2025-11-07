@@ -1,5 +1,4 @@
 import PlayerStats from '@/classes/PlayerStats';
-import LeagueSettings from '@/classes/LeagueSettings';
 const { Op } = require('sequelize');
 
 export default class MatchupStats {

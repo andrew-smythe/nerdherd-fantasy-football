@@ -8,7 +8,7 @@ import Paper from '@mui/material/Paper';
 import CardContent from '@mui/material/CardContent';
 import Text from '@mui/material/Typography';
 
-function PlayerData({ teamName, userName, points, reverse }) {
+function PlayerData({ teamName, userName, points, record, reverse }) {
     if (reverse) {
         return (
             <>
@@ -16,7 +16,7 @@ function PlayerData({ teamName, userName, points, reverse }) {
                     <Text variant="h3">{ points.toFixed(2) }</Text>
                 </Grid>
                 <Grid size={{ lg: 10, xs: 7 }}>
-                    <Text variant="h4" sx={{ textAlign: 'right' }}>{ teamName }</Text>
+                    <Text variant="h4" sx={{ textAlign: 'right' }}><Text component="span" sx={{ fontSize: 14, color: 'text.secondary' }}>{ record.wins }-{ record.losses }</Text> { teamName }</Text>
                     <Text variant="subtitle1" sx={{ color: 'text.secondary', textAlign: 'right' }}>{ userName }</Text>
                 </Grid>
             </>
@@ -26,7 +26,7 @@ function PlayerData({ teamName, userName, points, reverse }) {
         return (
             <>
                 <Grid size={{ lg: 10, xs: 7 }}>
-                    <Text variant="h4">{ teamName }</Text>
+                    <Text variant="h4">{ teamName } <Text component="span" sx={{ fontSize: 14, color: 'text.secondary' }}>{ record.wins }-{ record.losses }</Text></Text>
                     <Text variant="subtitle1" sx={{ color: 'text.secondary' }}>{ userName }</Text>
                 </Grid>
                 <Grid size={{ lg: 2, xs: 5 }}>
@@ -86,7 +86,7 @@ export default function PlayerHeader({
             <Paper variant="outlined">
                 <CardContent>
                     <Grid container sx={{ justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                        <PlayerData teamName={team} userName={username} points={totalPoints} reverse={reverse}></PlayerData>
+                        <PlayerData teamName={team} userName={username} points={totalPoints} reverse={reverse} record={record}></PlayerData>
                     </Grid>
                     <PositionScores positions={positions} positionSlots={positionSlots} reverse={reverse}></PositionScores>
                 </CardContent>
