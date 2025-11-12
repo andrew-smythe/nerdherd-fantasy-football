@@ -1,5 +1,5 @@
-import User from '@/classes/User';
 import LeagueSettings from '@/classes/LeagueSettings';
+import User from '@/classes/User';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import FormControl from '@mui/material/FormControl';
@@ -11,7 +11,6 @@ import Text from '@mui/material/Typography';
 import PlayerStats from '@/classes/PlayerStats';
 import PlayerHeader from '@/components/Matchup/PlayerHeader';
 import PositionRow from '@/components/Matchup/PositionRow';
-import { connect } from '@/db/utils/connect';
 import { useRouter } from 'next/navigation';
 import MatchupOptions from '@/components/Matchup/MatchupOptions';
 
@@ -87,8 +86,6 @@ export default async function Page({
         const week = parseInt(slug[2]);
         if (isNaN(userId) || isNaN(year) || isNaN(week)) throw new Error("INCORRECT PARAM FORMATTING");
 
-        const db = connect();
-
         const settings = await LeagueSettings.loadYear(year);
         if (!settings) throw new Error("COULD NOT LOAD LEAGUE SETTINGS FOR YEAR " + year);
 
@@ -101,7 +98,7 @@ export default async function Page({
         const matchupData = await team.getMatchupDataByWeek(week);
         if (!matchupData) throw new Error("COULD NOT FIND MATCHUP FOR WEEK " + week);
 
-        const record = await team.getRecordAtWeek(week, settings, db);
+        const record = await team.getRecordBeforeWeek(week, settings);
         if (!record) throw new Error("COULD NOT FIND RECORD AT WEEK " + week);
 
         const opponentUser = await User.fetchByTeamId(matchupData.opponentId);
@@ -113,7 +110,7 @@ export default async function Page({
         const opponentMatchupData = await opponentTeam.getMatchupDataByWeek(week);
         if (!opponentMatchupData) throw new Error("COULD NOT FIND OPPONENT MATCHUP FOR WEEK " + week);
 
-        const opponentRecord = await opponentTeam.getRecordAtWeek(week, settings, db);
+        const opponentRecord = await opponentTeam.getRecordBeforeWeek(week, settings);
         if (!opponentRecord) throw new Error("COULD NOT FIND OPPONENT RECORD AT WEEK " + week);
 
         let totalPoints = matchupData.totalPoints();

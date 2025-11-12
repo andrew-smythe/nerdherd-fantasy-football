@@ -44,7 +44,7 @@ function initModels(sequelize) {
   teams.hasMany(trades, { as: "trades", foreignKey: "team1"});
   trades.belongsTo(teams, { as: "team2_team", foreignKey: "team2"});
   teams.hasMany(trades, { as: "team2_trades", foreignKey: "team2"});
-  weeklyplayerstats.belongsTo(teams, { as: "fantasyTeam", foreignKey: "teamId"});
+  weeklyplayerstats.belongsTo(teams, { as: "playerTeam", foreignKey: "teamId"});
   teams.hasMany(weeklyplayerstats, { as: "weeklyplayerstats", foreignKey: "teamId"});
   teams.belongsTo(users, { as: "user", foreignKey: "userId"});
   users.hasMany(teams, { as: "teams", foreignKey: "userId"});

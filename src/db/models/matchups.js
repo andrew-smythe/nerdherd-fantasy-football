@@ -26,6 +26,18 @@ module.exports = function(sequelize, DataTypes) {
     week: {
       type: DataTypes.INTEGER,
       allowNull: false
+    },
+    winner: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    totalPoints: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    },
+    opponentTotalPoints: {
+      type: DataTypes.FLOAT,
+      allowNull: true
     }
   }, {
     sequelize,

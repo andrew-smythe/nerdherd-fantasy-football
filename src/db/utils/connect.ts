@@ -16,3 +16,5 @@ export function connect() {
 
     return models;
 }
+
+export default connect();

@@ -14,7 +14,7 @@ module.exports = function(sequelize, DataTypes) {
     order: {
       type: DataTypes.INTEGER,
       allowNull: true
-    },
+    }
   }, {
     sequelize,
     tableName: 'rosterpositions',

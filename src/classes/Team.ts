@@ -1,73 +1,81 @@
+import Matchup from '@/classes/Matchup';
 import MatchupStats from '@/classes/MatchupStats';
 import LeagueSettings from '@/classes/LeagueSettings';
+import { connect } from '@/db/utils/connect';
 const { Op } = require('sequelize');
 
 export default class Team {
     id: number;
     name: string;
     year: number;
+    userId: number;
     nflId: number;
     sleeperId: number;
-    weeks: MatchupStats[];
+    matchups: Matchup[];
 
-    constructor(id: number, name: string, year: number, nflId: number, sleeperId: number) {
+    constructor(id: number, name: string, year: number, userId: number, nflId: number, sleeperId: number, matchups) {
         this.id = id;
         this.name = name;
         this.year = year;
+        this.userId = userId;
         this.nflId = nflId;
         this.sleeperId = sleeperId;
-        this.weeks = [];
+        this.matchups = matchups;
     }
 
-    static async fetch(db, id: number, name: string, year: number, nflId: number, sleeperId: number) : Promise<Team> {
-        let team = new Team(id, name, year, nflId, sleeperId);
+    static async fetch(id: number) : Promise<Team | undefined> {
+        const db = connect();
 
-        const rawMatchups = await db.matchups.findAll({
-            where: {
-                teamId: id,
-            }
+        const rawTeamData = await db.teams.findByPk(id, {
+            include: 'team_matchups',
         });
-
-        const rawPlayerStats = await db.weeklyplayerstats.findAll({
-            where: {
-                teamId: id,
-            }
-        });
-
-        for (let m of rawMatchups) {
-            let playerStats = rawPlayerStats.filter(p => p.week == m.week);
-            team.weeks.push(await MatchupStats.fetch(playerStats, id, m.week, m.opponentId));
+        if (!rawTeamData) {
+            console.error('Could not find Team data for ID ' + id);
+            return undefined;
         }
+        const matchups : Matchup[] = [];
+        for (let m of rawTeamData.team_matchups) {
+            matchups.push(new Matchup(m.id, m.opponentId, m.week, m.totalPoints, m.opponentTotalPoints, m.winner === m.teamId));
+        }
+
+        let team = new Team(rawTeamData.id, rawTeamData.name, rawTeamData.year, rawTeamData.userId, rawTeamData.nflId, rawTeamData.sleeperId, matchups);
 
         return team;
     }
 
     async getMatchupDataByWeek(week: number) : Promise<MatchupStats | undefined> {
-        return this.weeks.find(w => w.week === week);
+        const matchup = this.matchups.find(m => m.week === week);
+        if (!matchup) {
+            return undefined;
+        }
+
+        const db = connect();
+        const rawPlayerStats = await db.weeklyplayerstats.findAll({
+            where: {
+                teamId: this.id,
+                week: week,
+            }
+        });
+
+        return await MatchupStats.fetch(rawPlayerStats, this.id, matchup.week, matchup.opponentId);
+
     }
 
-    async getRecordAtWeek(week: number, settings: LeagueSettings, db: any) : Promise<{ wins : number, losses : number }> {
+    async getRecordBeforeWeek(week: number, settings: LeagueSettings) : Promise<{ wins:  number, losses : number }> {
+        return await this.getRecordAtWeek(week-1, settings);
+    }
+
+    async getRecordAtWeek(week: number, settings: LeagueSettings) : Promise<{ wins : number, losses : number }> {
         let wins = 0;
         let losses = 0;
 
-        for (let i = 1; i < week; i++) {
+        for (let i = 1; i <= week; i++) {
             if (i > settings.numRegSeasonWeeks) break; // Only calculates reg season record
-            let matchup = await this.getMatchupDataByWeek(i);
-            let points = matchup!.playerStats.filter(ps => ps.rosterPositionId !== 8).reduce((acc, ps) => acc + ps.totalPoints, 0);
-            
-            let opponentId = matchup!.opponentId;
-            const opponentPlayerStats = await db.weeklyplayerstats.findAll({
-                where: {
-                    teamId: opponentId,
-                    week: i,
-                    rosterPositionId: {
-                        [Op.ne]: 8
-                    },
-                },
-            });
-            let opponentPoints = opponentPlayerStats.reduce((acc, ops) => acc + ops.totalPoints, 0);
-            
-            if (points > opponentPoints) {
+
+            const matchup = this.matchups.find(m => m.week == i);
+            if (!matchup) continue;
+
+            if (matchup.win) {
                 wins++;
             }
             else {
@@ -78,5 +86,39 @@ export default class Team {
             wins: wins,
             losses: losses,
         };
+    }
+
+    async getTotalPointsAtWeek(week: number, settings: LeagueSettings) : Promise<number> {
+        let totalPoints : number = 0;
+
+        for (let i = 1; i <= week; i++) {
+            if (i > settings.numRegSeasonWeeks) break; // Only calculates points in reg season
+
+            const matchup = this.matchups.find(m => m.week == i);
+            if (!matchup) continue;
+
+            totalPoints += matchup.totalPoints;
+        }
+
+        return totalPoints;
+    }
+
+    async getTotalPointsAgainstAtWeek(week: number, settings: LeagueSettings) : Promise<number> {
+        let totalPoints : number = 0;
+
+        for (let i = 1; i <= week; i++) {
+            if (i > settings.numRegSeasonWeeks) break; // Only calculates points in reg season
+
+            const matchup = this.matchups.find(m => m.week == i);
+            if (!matchup) continue;
+
+            totalPoints += matchup.totalPoints;
+        }
+
+        return totalPoints;
+    }
+
+    async getRecord(settings: LeagueSettings) : Promise<{ wins : number, losses : number }> {
+        return this.getRecordAtWeek(settings.numRegSeasonWeeks, settings);
     }
 }

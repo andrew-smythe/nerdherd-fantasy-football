@@ -1,9 +1,23 @@
 import { connect } from '@/db/utils/connect';
 import Team from '@/classes/Team';
 
+class TeamData {
+    id: number;
+    name: string;
+    year: number;
+    source: string;
+
+    constructor(id: number, name: string, year: number, source: string) {
+        this.id = id;
+        this.name = name;
+        this.year = year;
+        this.source = source;
+    }
+}
+
 export default class User {
     id: number;
-    teams: Team[];
+    teams: TeamData[];
     name: string;
 
     constructor(id : number, name: string) {
@@ -29,7 +43,7 @@ export default class User {
         });
 
         for (let t of rawTeams) {
-            user.teams.push(await Team.fetch(db, t.id, t.name, t.year, t.nflId, t.sleeperId));
+            user.teams.push(new TeamData(t.id, t.name, t.year, t.NflId !== null ? 'nfl' : 'sleeper'));
         }
 
         return user;
@@ -58,6 +72,10 @@ export default class User {
     }
 
     async getTeamByYear(year: number) : Promise<Team | undefined> {
-        return this.teams.find(t => t.year === year);
+        const teamData = this.teams.find(t => t.year === year);
+        if (teamData) {
+            return Team.fetch(teamData.id);
+        }
+        return undefined;
     }
 }
