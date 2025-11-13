@@ -1,4 +1,4 @@
-
+'use client';
 import * as React from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -20,7 +20,7 @@ async function getDraftDataFromSleeper() {
     try {        
         // get all the users
         const usersUrl = sleeperApiUrl + "league/" + leagueId + "/users";
-        const usersFetch = await fetch(usersUrl);
+        const usersFetch = await fetch(usersUrl, { cache: 'no-store' });
         if (!usersFetch.ok) {
             throw new Error("Could not fetch users: " + usersFetch.status);
         }
@@ -31,7 +31,7 @@ async function getDraftDataFromSleeper() {
 
         // Get the rosters
         const rostersUrl = sleeperApiUrl + "league/" + leagueId + "/rosters";
-        const rostersFetch = await fetch(rostersUrl);
+        const rostersFetch = await fetch(rostersUrl, { cache: 'no-store' });
         if (!rostersFetch.ok) {
             throw new Error("Could not fetch rosters: " + rostersFetch.status);
         }
@@ -45,7 +45,7 @@ async function getDraftDataFromSleeper() {
 
         // figure out what week it is
         const nflStateUrl = sleeperApiUrl + "state/nfl";
-        const nflFetch = await fetch(nflStateUrl);
+        const nflFetch = await fetch(nflStateUrl, { cache: 'no-store' });
         if (!nflFetch.ok) {
             throw new Error("Could not fetch nfl status: " + nflFetch.status);
         }
@@ -57,7 +57,7 @@ async function getDraftDataFromSleeper() {
         // Get ALL THE MATCHUPS
         for (let i = 1; i <= currentWeek; i++) {
             const matchupsUrl = sleeperApiUrl + "league/" + leagueId + "/matchups/" + i;
-            const matchupsFetch = await fetch(matchupsUrl);
+            const matchupsFetch = await fetch(matchupsUrl, { cache: 'no-store' });
             if (!matchupsFetch.ok) {
                 throw new Error("Could not fetch matchups for week " + i + " " + matchupsFetch.status);
             }
@@ -96,7 +96,7 @@ async function getDraftDataFromSleeper() {
     }
 }
 
-export default async function DraftDraft() {
+export default async function Page() {
 
     let users = await getDraftDataFromSleeper();
 
@@ -116,7 +116,7 @@ export default async function DraftDraft() {
                     </TableHead>
                     <TableBody>
                         {
-                            users.map(u => (
+                            users && users.map(u => (
                                 <TableRow
                                     key={u.name}
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 }}}
