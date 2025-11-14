@@ -19,7 +19,7 @@ async function getDraftDataFromSleeper() {
     try {        
         // get all the users
         const usersUrl = sleeperApiUrl + "league/" + leagueId + "/users";
-        const usersFetch = await fetch(usersUrl, { next: { revalidate: 900 } });
+        const usersFetch = await fetch(usersUrl, { cache: 'no-store' });
         if (!usersFetch.ok) {
             throw new Error("Could not fetch users: " + usersFetch.status);
         }
@@ -30,7 +30,7 @@ async function getDraftDataFromSleeper() {
 
         // Get the rosters
         const rostersUrl = sleeperApiUrl + "league/" + leagueId + "/rosters";
-        const rostersFetch = await fetch(rostersUrl, { next: { revalidate: 900 } });
+        const rostersFetch = await fetch(rostersUrl, { cache: 'no-store' });
         if (!rostersFetch.ok) {
             throw new Error("Could not fetch rosters: " + rostersFetch.status);
         }
@@ -44,7 +44,7 @@ async function getDraftDataFromSleeper() {
 
         // figure out what week it is
         const nflStateUrl = sleeperApiUrl + "state/nfl";
-        const nflFetch = await fetch(nflStateUrl, { next: { revalidate: 900 } });
+        const nflFetch = await fetch(nflStateUrl, { cache: 'no-store' });
         if (!nflFetch.ok) {
             throw new Error("Could not fetch nfl status: " + nflFetch.status);
         }
@@ -56,7 +56,7 @@ async function getDraftDataFromSleeper() {
         // Get ALL THE MATCHUPS
         for (let i = 1; i <= currentWeek; i++) {
             const matchupsUrl = sleeperApiUrl + "league/" + leagueId + "/matchups/" + i;
-            const matchupsFetch = await fetch(matchupsUrl, { next: { revalidate: 900 } });
+            const matchupsFetch = await fetch(matchupsUrl, { cache: 'no-store' });
             if (!matchupsFetch.ok) {
                 throw new Error("Could not fetch matchups for week " + i + " " + matchupsFetch.status);
             }
