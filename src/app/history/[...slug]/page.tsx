@@ -38,7 +38,7 @@ export default async function Page({
         return (
             <Grid container spacing={2}>
                 { /* Regular season */ }
-                <Grid size={{ xs: 12, md: 6 }}>
+                <Paper component={Grid} size={{ xs: 12, md: 6 }} sx={{ p: 2 }} variant="outlined">
                     <Text variant="h4" sx={{ textAlign: "center" }}>{ year } Regular Season</Text>
                     <Divider textAlign="center" sx={{ my: 1 }}>
                         <Text variant="button" sx={{ color: "text.secondary" }}>Standings</Text>
@@ -71,9 +71,9 @@ export default async function Page({
                         )) 
                     }
                     </List>
-                </Grid>
+                </Paper>
                 { /* Playoffs */ }
-                <Grid size={{ xs: 12, md: 6 }}>
+                <Paper component={Grid} size={{ xs: 12, md: 6 }} sx={{ p: 2 }} variant="outlined">
                     <Text variant="h4" sx={{ textAlign: "center" }}>{ year } Playoffs</Text>
                     {
                         playoffWeekSummaries.map((week, i) => (
@@ -104,7 +104,7 @@ export default async function Page({
                             </Box>
                         ))
                     }
-                </Grid>
+                </Paper>
             </Grid>
         );
     }

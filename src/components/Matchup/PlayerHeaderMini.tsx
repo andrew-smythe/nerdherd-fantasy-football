@@ -67,7 +67,7 @@ export default function PlayerHeaderMini({
     return (
         <Card variant="outlined" sx={{ mb: 1 }}>
             <CardActionArea component={Link} href={matchupRoute}>
-                <CardContent>
+                <CardContent sx={{ py: 0.8 }}>
                     <Grid container sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
                         <PlayerData 
                             team1Name={team1Name}
