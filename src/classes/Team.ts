@@ -1,6 +1,7 @@
 import Matchup from '@/classes/Matchup';
 import MatchupStats from '@/classes/MatchupStats';
 import LeagueSettings from '@/classes/LeagueSettings';
+import Standing from '@/classes/Standing';
 import { connect } from '@/db/utils/connect';
 const { Op } = require('sequelize');
 
@@ -35,7 +36,7 @@ export default class Team {
         }
         const matchups : Matchup[] = [];
         for (let m of rawTeamData.team_matchups) {
-            matchups.push(new Matchup(m.id, m.opponentId, m.week, m.totalPoints, m.opponentTotalPoints, m.winner === m.teamId));
+            matchups.push(new Matchup(m.id, m.opponentId, m.week, m.totalPoints, m.opponentTotalPoints, (m.winner === m.teamId || m.opponentId === null), m.opponentId === null));
         }
 
         let team = new Team(rawTeamData.id, rawTeamData.name, rawTeamData.year, rawTeamData.userId, rawTeamData.nflId, rawTeamData.sleeperId, matchups);
@@ -61,11 +62,11 @@ export default class Team {
 
     }
 
-    async getRecordBeforeWeek(week: number, settings: LeagueSettings) : Promise<{ wins:  number, losses : number }> {
+    async getRecordBeforeWeek(week: number, settings: LeagueSettings) : Promise<Standing> {
         return await this.getRecordAtWeek(week-1, settings);
     }
 
-    async getRecordAtWeek(week: number, settings: LeagueSettings) : Promise<{ wins : number, losses : number }> {
+    async getRecordAtWeek(week: number, settings: LeagueSettings) : Promise<Standing> {
         let wins = 0;
         let losses = 0;
 
@@ -82,10 +83,7 @@ export default class Team {
                 losses++;
             }
         }
-        return {
-            wins: wins,
-            losses: losses,
-        };
+        return new Standing(this, wins, losses, await this.getTotalPointsAtWeek(week, settings));
     }
 
     async getTotalPointsAtWeek(week: number, settings: LeagueSettings) : Promise<number> {
@@ -118,7 +116,7 @@ export default class Team {
         return totalPoints;
     }
 
-    async getRecord(settings: LeagueSettings) : Promise<{ wins : number, losses : number }> {
+    async getRecord(settings: LeagueSettings) : Promise<Standing> {
         return this.getRecordAtWeek(settings.numRegSeasonWeeks, settings);
     }
 }

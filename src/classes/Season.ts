@@ -1,6 +1,9 @@
 import { connect } from '@/db/utils/connect';
-import Team from '@/classes/Team';
 import LeagueSettings from '@/classes/LeagueSettings';
+import Matchup from '@/classes/Matchup';
+import Playoff from '@/classes/Playoff';
+import Team from '@/classes/Team';
+import Standing from '@/classes/Standing';
 
 export default class Season {
     year: number;
@@ -39,7 +42,7 @@ export default class Season {
     }
 
     // CREATE CLASS FOR THIS RETURN TYPE
-    async getRegularSeasonStandings() : Promise<{ team: Team, wins: number, losses: number, totalPoints: number }[]> {
+    async getRegularSeasonStandings() : Promise<Standing[]> {
         const ret : { team: Team, wins: number, losses: number, totalPoints: number }[] = [];
         const numRegSeasonWeeks = this.settings.numRegSeasonWeeks;
 
@@ -72,8 +75,47 @@ export default class Season {
         return ret;
     }
 
-    /* TODO - get playoff stuff
     async getPlayoffs() : Promise<Playoff> {
+        const numWeeks = this.settings.numPlayoffWeeks;
+        const numTeams = this.settings.numTeamsPlayoffs;
+        const numByeTeams = Math.pow(2, numWeeks) - numTeams;
 
-    }*/
+        let firstWeek = this.settings.numRegSeasonWeeks + 1;
+
+        const playoffTeams = (await this.getRegularSeasonStandings()).slice(0, numTeams);
+        const playoffTeamsArr : Team[][] = [];
+        playoffTeamsArr[0] = [];
+        for (let i = 0; i < playoffTeams.length; i++) {
+            playoffTeamsArr[0].push(playoffTeams[i].team);
+        }
+
+        let nextWeekTeams : Team[] = [];
+        for (let i = 0; i < numByeTeams; i++) {
+            nextWeekTeams.push(playoffTeams[i].team);
+        }
+
+        for (let i = 0; i < numWeeks; i++) {
+            // For each playoff week, determine the winners and add them to the next round
+            let week : number = firstWeek + i;
+            
+            for (let j = 0; j < playoffTeamsArr[i].length; j++) {
+                let team : Team = playoffTeamsArr[i][j];
+                if (nextWeekTeams.find(t => t.id == team.id)) continue;
+
+                let matchup : Matchup = team.matchups[week-1];
+                let win : boolean = matchup.totalPoints > matchup.opponentTotalPoints ? true : false;
+                if (win) {
+                    nextWeekTeams.push(team);
+                }
+            }
+            if (i < numWeeks - 1 ) {
+                playoffTeamsArr[i+1] = [];
+                playoffTeamsArr[i+1].push(...nextWeekTeams);
+                nextWeekTeams = [];
+            }
+        }
+
+        let playoff = new Playoff(this.year, firstWeek, numWeeks, playoffTeamsArr);
+        return playoff;
+    }
 }

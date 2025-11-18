@@ -136,20 +136,24 @@ export default async function Page({
                 <MatchupOptions userId={userId} users={users} year={year} week={week} numWeeks={numWeeks} minYear={2010} maxYear={2024}></MatchupOptions>
                 <Grid container spacing={2} sx={{ mb: 2 }}>
                     <PlayerHeader
-                        record={record}
+                        wins={record.wins}
+                        losses={record.losses}
                         team={team.name}
                         username={user.name}
                         totalPoints={totalPoints}
                         positions={positionPoints}
                         positionSlots={positionSlots}
+                        winner={totalPoints > opponentTotalPoints}
                     ></PlayerHeader>
                     <PlayerHeader
-                        record={opponentRecord}
+                        wins={record.wins}
+                        losses={record.losses}
                         team={opponentTeam.name}
                         username={opponentUser.name}
                         totalPoints={opponentTotalPoints}
                         positions={opponentPositionPoints}
                         positionSlots={positionSlots}
+                        winner={opponentTotalPoints > totalPoints}
                         reverse
                     ></PlayerHeader>
                 </Grid>

@@ -7,8 +7,9 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import CardContent from '@mui/material/CardContent';
 import Text from '@mui/material/Typography';
+import WinnerIcon from '@mui/icons-material/EmojiEvents';
 
-function PlayerData({ teamName, userName, points, record, reverse }) {
+function PlayerData({ teamName, userName, points, wins, losses, reverse, winner }) {
     if (reverse) {
         return (
             <>
@@ -16,7 +17,7 @@ function PlayerData({ teamName, userName, points, record, reverse }) {
                     <Text variant="h3">{ points.toFixed(2) }</Text>
                 </Grid>
                 <Grid size={{ lg: 10, xs: 7 }}>
-                    <Text variant="h4" sx={{ textAlign: 'right' }}><Text component="span" sx={{ fontSize: 14, color: 'text.secondary' }}>{ record.wins }-{ record.losses }</Text> { teamName }</Text>
+                    <Text variant="h4" sx={{ textAlign: 'right' }}><Text component="span" sx={{ fontSize: 14, color: 'text.secondary' }}>{ wins }-{ losses }</Text> { teamName }{ winner ? <WinnerIcon fontSize="inherit" sx={{ verticalAlign: "middle" }} /> : "" }</Text>
                     <Text variant="subtitle1" sx={{ color: 'text.secondary', textAlign: 'right' }}>{ userName }</Text>
                 </Grid>
             </>
@@ -26,7 +27,7 @@ function PlayerData({ teamName, userName, points, record, reverse }) {
         return (
             <>
                 <Grid size={{ lg: 10, xs: 7 }}>
-                    <Text variant="h4">{ teamName } <Text component="span" sx={{ fontSize: 14, color: 'text.secondary' }}>{ record.wins }-{ record.losses }</Text></Text>
+                    <Text variant="h4">{ winner ? (<><WinnerIcon fontSize="inherit" sx={{ verticalAlign: "middle" }} /><span>&nbsp;</span></>) : "" }{ teamName } <Text component="span" sx={{ fontSize: 14, color: 'text.secondary' }}>{ wins }-{ losses }</Text></Text>
                     <Text variant="subtitle1" sx={{ color: 'text.secondary' }}>{ userName }</Text>
                 </Grid>
                 <Grid size={{ lg: 2, xs: 5 }}>
@@ -73,20 +74,22 @@ function PositionScores({ positions, positionSlots, reverse }) {
 }
 
 export default function PlayerHeader({
-        record,
+        wins,
+        losses,
         team,
         username,
         totalPoints,
         reverse = false,
         positions,
         positionSlots,
+        winner
 }) {
     return (
         <Grid size={{ xs: 12, md: 6 }}>
             <Paper variant="outlined">
                 <CardContent>
                     <Grid container sx={{ justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                        <PlayerData teamName={team} userName={username} points={totalPoints} reverse={reverse} record={record}></PlayerData>
+                        <PlayerData teamName={team} userName={username} points={totalPoints} reverse={reverse} wins={wins} losses={losses} winner={winner}></PlayerData>
                     </Grid>
                     <PositionScores positions={positions} positionSlots={positionSlots} reverse={reverse}></PositionScores>
                 </CardContent>
