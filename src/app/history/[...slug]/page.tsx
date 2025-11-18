@@ -2,7 +2,7 @@ import * as React from 'react';
 import Playoff from '@/classes/Playoff';
 import Season from '@/classes/Season';
 import PlayerHeaderMini from '@/components/Matchup/PlayerHeaderMini';
-import { Box, Card, CardActionArea, CardContent, Divider, Grid, List, ListItem, ListItemText } from '@mui/material';
+import { Box, Card, CardActionArea, CardContent, Divider, Grid, List, ListItem, ListItemText, Paper } from '@mui/material';
 import Text from '@mui/material/Typography';
 
 export default async function Page({
@@ -34,7 +34,7 @@ export default async function Page({
                     <Divider textAlign="center" sx={{ my: 1 }}>
                         <Text variant="button" sx={{ color: "text.secondary" }}>Standings</Text>
                     </Divider>
-                    <List component={Card} variant="outlined">
+                    <List component={Paper} elevation={2} variant="outlined">
                     { 
                         standings.map((s, i) => (
                             <React.Fragment key={"team"+i}>
@@ -60,16 +60,6 @@ export default async function Page({
                             </React.Fragment>
                         )) 
                     }
-
-                            { /*
-                            <Card key={"team"+i} sx={{ mb: 1, pb: -3 }} variant="outlined">
-                                <CardActionArea>
-                                    <CardContent>
-                                        <Text variant="subtitle1">#{ i+1 } { s.team.name } { s.wins }-{ s.losses } { s.totalPoints.toFixed(2) }</Text>
-                                    </CardContent>
-                                </CardActionArea>
-                            </Card>
-                            */ }
                     </List>
                 </Grid>
                 { /* Playoffs */ }
