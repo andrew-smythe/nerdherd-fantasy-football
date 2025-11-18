@@ -47,7 +47,7 @@ export default async function Page({
                     { 
                         standings.map((s, i) => (
                             <React.Fragment key={"team"+i}>
-                                <ListItem>
+                                <ListItem sx={{ py: 0.5 }}>
                                     <ListItemText
                                         primary={
                                             <Grid container spacing={2} sx={{ alignItems: "center" }}>
