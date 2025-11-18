@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Playoff from '@/classes/Playoff';
 import Season from '@/classes/Season';
+import User from '@/classes/User';
 import PlayerHeaderMini from '@/components/Matchup/PlayerHeaderMini';
 import { Box, Card, CardActionArea, CardContent, Divider, Grid, List, ListItem, ListItemText, Paper } from '@mui/material';
 import Text from '@mui/material/Typography';
@@ -25,6 +26,14 @@ export default async function Page({
         for (let i = 1; i <= playoffData.numWeeks; i++) {
             playoffWeekSummaries.push(await playoffData.getMatchupSummaryByWeek(i));
         }
+
+        const getUsername = async function(id: number) {
+            const user : User | undefined = await User.fetchByUserId(id);
+            if (user) {
+                return user.name;
+            }
+            return "-";
+        }
         
         return (
             <Grid container spacing={2}>
@@ -34,21 +43,22 @@ export default async function Page({
                     <Divider textAlign="center" sx={{ my: 1 }}>
                         <Text variant="button" sx={{ color: "text.secondary" }}>Standings</Text>
                     </Divider>
-                    <List component={Paper} elevation={2} variant="outlined">
+                    <List component={Paper} elevation={2} variant="outlined" sx={{py: 0}}>
                     { 
                         standings.map((s, i) => (
                             <React.Fragment key={"team"+i}>
                                 <ListItem>
                                     <ListItemText
                                         primary={
-                                            <Grid container spacing={2}>
+                                            <Grid container spacing={2} sx={{ alignItems: "center" }}>
                                                 <Grid size={8}>
                                                     <Text variant="body1" component="span">
                                                         #{ i+1 } { s.team.name } <Text component="span" sx={{ fontSize: 14, color: 'text.secondary' }}>{ s.wins }-{ s.losses }</Text>
                                                     </Text>
+                                                    <Text variant="subtitle1" sx={{ color: 'text.secondary' }}>{ getUsername(s.team.userId) }</Text>
                                                 </Grid>
-                                                <Grid size={4} sx={{ textAlign: "right" }}>
-                                                    <Text variant="body2" component="span">
+                                                <Grid size={4} sx={{ textAlign: "right", verticalAlign: "middle", height: "100%" }}>
+                                                    <Text variant="body2" component="p">
                                                         PF: { s.totalPoints.toFixed(2) }
                                                     </Text>
                                                 </Grid>
