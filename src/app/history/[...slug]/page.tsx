@@ -39,7 +39,7 @@ export default async function Page({
             <Grid container spacing={2}>
                 { /* Regular season */ }
                 <Paper component={Grid} size={{ xs: 12, md: 6 }} sx={{ p: 2 }} variant="outlined">
-                    <Text variant="h4" sx={{ textAlign: "center" }}>{ year } Regular Season</Text>
+                    <Text variant="h5" sx={{ textAlign: "center" }}>{ year } Regular Season</Text>
                     <Divider textAlign="center" sx={{ my: 1 }}>
                         <Text variant="button" sx={{ color: "text.secondary" }}>Standings</Text>
                     </Divider>
@@ -74,7 +74,7 @@ export default async function Page({
                 </Paper>
                 { /* Playoffs */ }
                 <Paper component={Grid} size={{ xs: 12, md: 6 }} sx={{ p: 2 }} variant="outlined">
-                    <Text variant="h4" sx={{ textAlign: "center" }}>{ year } Playoffs</Text>
+                    <Text variant="h5" sx={{ textAlign: "center" }}>{ year } Playoffs</Text>
                     {
                         playoffWeekSummaries.map((week, i) => (
                             <Box key={"week"+i}>

@@ -16,20 +16,20 @@ export default class Playoff {
     }
 
     async getMatchupSummaryByWeek(week: number) : Promise<any> {
-        let playoffWeek = this.startingWeek + (week - 1);
-        let playoffTeams = this.weeks[week-1];
-        let ret : any = [];
+        const playoffWeek = this.startingWeek + (week - 1);
+        const playoffTeams = this.weeks[week-1];
+        const ret : any = [];
 
         for (let team of playoffTeams) {
             // Don't add team to summary if their matchup already exists
             if (ret.find(r => r.team1Id == team.id) || ret.find(r => r.team2Id == team.id)) continue;
 
-            let matchup = team.matchups[playoffWeek-1];
-            let opponentTeam = matchup.opponentId ? await Team.fetch(matchup.opponentId) : null;
+            const matchup = team.matchups[playoffWeek-1];
+            const opponentTeam = matchup.opponentId ? await Team.fetch(matchup.opponentId) : null;
 
-            let settings = await LeagueSettings.loadYear(this.year);
-            let teamRecord = await team.getRecord(settings!);
-            let opponentRecord = opponentTeam ? await opponentTeam.getRecord(settings!) : null;
+            const settings = await LeagueSettings.loadYear(this.year);
+            const teamRecord = await team.getRecord(settings!);
+            const opponentRecord = opponentTeam ? await opponentTeam.getRecord(settings!) : null;
             
             ret.push({
                 id: matchup.id,
