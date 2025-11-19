@@ -13,10 +13,10 @@ function PlayerData({ team1Name, team1Points, team1Wins, team1Losses, team2Name,
     if (bye) {
         return (
                 <>
-                    <Grid size={{ lg: 10, xs: 7 }}>
+                    <Grid size={{ lg: 10, xs: 9 }}>
                         <Text variant="subtitle1"><WinnerIcon fontSize="inherit" sx={{ verticalAlign: "middle" }} />&nbsp;{ team1Name } <Text component="span" sx={{ fontSize: 14, color: 'text.secondary' }}>{ team1Wins }-{ team1Losses }</Text></Text>
                     </Grid>
-                    <Grid size={{ lg: 2, xs: 5 }}>
+                    <Grid size={{ lg: 2, xs: 3 }}>
                         <Text variant="subtitle2" sx={{ textAlign: 'right' }}>{ team1Points?.toFixed(2) }</Text>
                     </Grid>
                     <Grid size={12}>
@@ -29,16 +29,16 @@ function PlayerData({ team1Name, team1Points, team1Wins, team1Losses, team2Name,
         const win = team1Points > team2Points ? 1 : 2;
         return (
                 <>
-                    <Grid size={{ lg: 10, xs: 7 }}>
+                    <Grid size={{ lg: 10, xs: 9 }}>
                         <Text variant="subtitle1">{ win == 1 ? (<><WinnerIcon fontSize="inherit" sx={{ verticalAlign: "middle" }} /><span>&nbsp;</span></>) : "" }{ team1Name } <Text component="span" sx={{ fontSize: 14, color: 'text.secondary' }}>{ team1Wins }-{ team1Losses }</Text></Text>
                     </Grid>
-                    <Grid size={{ lg: 2, xs: 5 }}>
+                    <Grid size={{ lg: 2, xs: 3 }}>
                         <Text variant="subtitle2" sx={{ textAlign: 'right' }}>{ team1Points?.toFixed(2) }</Text>
                     </Grid>
-                    <Grid size={{ lg: 10, xs: 7 }}>
+                    <Grid size={{ lg: 10, xs: 9 }}>
                         <Text variant="subtitle1">{ win == 2 ? (<><WinnerIcon fontSize="inherit" sx={{ verticalAlign: "middle" }} /><span>&nbsp;</span></>) : "" }{ team2Name } <Text component="span" sx={{ fontSize: 14, color: 'text.secondary' }}>{ team2Wins }-{ team2Losses }</Text></Text>
                     </Grid>
-                    <Grid size={{ lg: 2, xs: 5 }}>
+                    <Grid size={{ lg: 2, xs: 3 }}>
                         <Text variant="subtitle2" sx={{ textAlign: 'right' }}>{ team2Points.toFixed(2) }</Text>
                     </Grid>
                 </>

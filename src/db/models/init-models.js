@@ -61,6 +61,7 @@ function initModels(sequelize) {
     trades,
     users,
     weeklyplayerstats,
+    sequelize
   };
 }
 module.exports = initModels;

@@ -36,10 +36,12 @@ export default class Team {
         }
         const matchups : Matchup[] = [];
         for (let m of rawTeamData.team_matchups) {
-            matchups.push(new Matchup(m.id, m.opponentId, m.week, m.totalPoints, m.opponentTotalPoints, (m.winner === m.teamId || m.opponentId === null), m.opponentId === null));
+            matchups.push(new Matchup(m.id, m.teamId, m.opponentId, m.week, m.totalPoints, m.opponentTotalPoints, (m.winner === m.teamId || m.opponentId === null), m.opponentId === null));
         }
 
         let team = new Team(rawTeamData.id, rawTeamData.name, rawTeamData.year, rawTeamData.userId, rawTeamData.nflId, rawTeamData.sleeperId, matchups);
+
+        db.sequelize.close();
 
         return team;
     }
@@ -57,6 +59,8 @@ export default class Team {
                 week: week,
             }
         });
+
+        db.sequelize.close();
 
         return await MatchupStats.fetch(rawPlayerStats, this.id, matchup.week, matchup.opponentId);
 

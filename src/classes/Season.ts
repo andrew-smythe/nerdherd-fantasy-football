@@ -38,6 +38,8 @@ export default class Season {
             }
         }
 
+        db.sequelize.close();
+
         return new Season(year, teams, settings);
     }
 
@@ -73,6 +75,54 @@ export default class Season {
         });
 
         return ret;
+    }
+
+    // Get a summary of all matchups for the Season
+    // see: Playoff.getMatchupSummaryByWeek
+    async getRegularSeasonMatchupSummaries() : Promise<any[][]> {
+        const matchups : any = [];
+        const numWeeks = this.settings.numRegSeasonWeeks;
+
+        for (let i = 0; i < numWeeks; i++) {
+            matchups.push([]);
+            for (let team of this.teams) {
+                let matchup = team.matchups[i];
+
+                // Each matchup will be encountered twice - once for each player involved
+                // We only want to add one entry per matchup
+                const checkMatchup = matchups[i].findIndex(m =>
+                    m.team1Id == matchup.teamId && m.team2Id == matchup.opponentId
+                    || m.team1Id == matchup.opponentId && m.team2Id == matchup.teamId
+                );
+
+                if (checkMatchup < 0) {
+                    const opponentTeam = this.teams.find(t => t.id == matchup.opponentId);
+                    const record = await team.getRecordBeforeWeek(i+1, this.settings);
+                    const opponentRecord = await opponentTeam?.getRecordBeforeWeek(i+1, this.settings);
+
+                    matchups[i].push({
+                        id: matchup.id,
+                        team1Id: matchup.teamId,
+                        team1Name: team.name,
+                        team1UserId: team.userId,
+                        team1Points: matchup.totalPoints,
+                        team1Wins: record.wins,
+                        team1Losses: record.losses,
+                        team2Id: opponentTeam?.id,
+                        team2Name: opponentTeam?.name,
+                        team2UserId: opponentTeam?.userId,
+                        team2Points: matchup.opponentTotalPoints,
+                        team2Wins: opponentRecord?.wins,
+                        team2Losses: opponentRecord?.losses,
+                        week: matchup.week,
+                        bye: matchup.bye,
+                    });
+                }
+            }
+        }
+
+        return matchups;
+
     }
 
     async getPlayoffs() : Promise<Playoff> {

@@ -129,7 +129,7 @@ export default async function Page({
         const opponentBench = getSlottedPlayers(opponentMatchupData.playerStats.filter(ps => ps.rosterPositionId === 8), benchSlots);
 
         const numWeeks = settings.numRegSeasonWeeks + settings.numPlayoffWeeks;
-        const users = await User.fetchAllUsers();
+        const users = await User.fetchAllUsersRaw();
 
         return (
             <Box sx={{ flexGrow: 1 }}>

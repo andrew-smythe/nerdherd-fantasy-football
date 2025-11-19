@@ -57,6 +57,25 @@ export default class LeagueSettings {
             }
         });
 
+        db.sequelize.close();
+
         return new LeagueSettings(ls.numWeeksRegular, ls.numWeeksPlayoffs, ls.numTeams, ls.numTeamsPlayoffs, year, ls.source, rosterPositions);
+    }
+
+    static async loadAllYears() : Promise<LeagueSettings[]> {
+        const db = connect();
+
+        const rawLeagueSettings = await db.leaguesettings.findAll();
+        const firstYear = Math.min(...rawLeagueSettings.map(ls => ls.year));
+        const lastYear = Math.max(...rawLeagueSettings.map(ls => ls.year));
+
+        const leagueSettings : LeagueSettings[] = [];
+        for (let year = firstYear; year <= lastYear; year++) {
+            leagueSettings.push((await LeagueSettings.loadYear(year))!);
+        }
+
+        db.sequelize.close();
+
+        return leagueSettings;
     }
 }
