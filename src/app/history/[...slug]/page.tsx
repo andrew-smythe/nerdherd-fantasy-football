@@ -2,7 +2,7 @@ import * as React from 'react';
 import Playoff from '@/classes/Playoff';
 import Season from '@/classes/Season';
 import User from '@/classes/User';
-import PlayerHeaderMini from '@/components/Matchup/PlayerHeaderMini';
+import MatchupSummaryMini from '@/components/Matchup/MatchupSummaryMini';
 import { Box, Card, CardActionArea, CardContent, Divider, Grid, List, ListItem, ListItemText, Paper } from '@mui/material';
 import Text from '@mui/material/Typography';
 
@@ -83,7 +83,7 @@ export default async function Page({
                                 </Divider>
                                 {
                                     week.map(matchup => (
-                                        <PlayerHeaderMini
+                                        <MatchupSummaryMini
                                             team1Name={matchup.team1Name}
                                             team2Name={matchup.team2Name}
                                             team1Points={matchup.team1Points}
@@ -98,7 +98,7 @@ export default async function Page({
                                             year={year}
                                             week={playoffData.startingWeek + i}
                                             key={"matchup" + matchup.id}
-                                        ></PlayerHeaderMini>
+                                        ></MatchupSummaryMini>
                                     ))
                                 }
                             </Box>

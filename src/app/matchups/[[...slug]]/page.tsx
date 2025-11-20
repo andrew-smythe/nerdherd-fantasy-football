@@ -3,7 +3,7 @@ import LeagueSettings from '@/classes/LeagueSettings';
 import Matchup from '@/classes/Matchup';
 import Season from '@/classes/Season';
 import MatchupFilters from '@/components/Matchup/MatchupsFilters';
-import PlayerHeaderMini from '@/components/Matchup/PlayerHeaderMini';
+import MatchupSummaryMini from '@/components/Matchup/MatchupSummaryMini';
 import { Box, Divider, Grid, Paper } from '@mui/material';
 import Text from '@mui/material/Typography';
 
@@ -47,7 +47,7 @@ export default async function Page({
                                     {
                                         week.map(matchup => (
                                             <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={"matchup" + matchup.id}>
-                                                <PlayerHeaderMini
+                                                <MatchupSummaryMini
                                                     team1Name={matchup.team1Name}
                                                     team2Name={matchup.team2Name}
                                                     team1Points={matchup.team1Points}
@@ -61,7 +61,7 @@ export default async function Page({
                                                     bye={matchup.bye}
                                                     year={year}
                                                     week={matchup.week}
-                                                ></PlayerHeaderMini>
+                                                ></MatchupSummaryMini>
                                             </Grid>
                                         ))
                                     }
