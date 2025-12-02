@@ -146,8 +146,8 @@ export default async function Page({
                         winner={totalPoints > opponentTotalPoints}
                     ></PlayerHeader>
                     <PlayerHeader
-                        wins={record.wins}
-                        losses={record.losses}
+                        wins={opponentRecord.wins}
+                        losses={opponentRecord.losses}
                         team={opponentTeam.name}
                         username={opponentUser.name}
                         totalPoints={opponentTotalPoints}
