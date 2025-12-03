@@ -55,6 +55,10 @@ async function getDraftDataFromSleeper() {
 
         // Get ALL THE MATCHUPS
         for (let i = 1; i <= currentWeek; i++) {
+            // do not count non-regular season weeks
+            if (i > 14) {
+                break;
+            }
             const matchupsUrl = sleeperApiUrl + "league/" + leagueId + "/matchups/" + i;
             const matchupsFetch = await fetch(matchupsUrl, { next: { revalidate: 900 } });
             if (!matchupsFetch.ok) {
