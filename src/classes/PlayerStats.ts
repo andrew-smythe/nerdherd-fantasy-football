@@ -9,6 +9,7 @@ export default class PlayerStats {
     passingTds: number;
     passingInts: number;
     rushingYards: number;
+    rushingTds: number;
     receivingYards: number;
     receivingTds: number;
     fumbles: number;
@@ -40,6 +41,7 @@ export default class PlayerStats {
         passingTds: number | undefined,
         passingInts: number | undefined,
         rushingYards: number | undefined,
+        rushingTds: number | undefined,
         receivingYards: number | undefined,
         receivingTds: number | undefined,
         fumbles: number | undefined,
@@ -71,6 +73,7 @@ export default class PlayerStats {
         this.passingTds = passingTds ?? 0;
         this.passingInts = passingInts ?? 0;
         this.rushingYards = rushingYards ?? 0;
+        this.rushingTds = rushingTds ?? 0;
         this.receivingYards = receivingYards ?? 0;
         this.receivingTds = receivingTds ?? 0;
         this.fumbles = fumbles ?? 0;

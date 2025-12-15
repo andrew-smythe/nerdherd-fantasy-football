@@ -40,7 +40,7 @@ function createStatsLine(playerStats) {
             statsStr += playerStats.rushingYards + " Rush Yd, ";
         }
         if (playerStats.rushingTds) {
-            statsStr += playerStats.rushingTds + " Rush TDs";
+            statsStr += playerStats.rushingTds + " Rush TDs, ";
         }
         if (playerStats.receivingYards) {
             statsStr += playerStats.receivingYards + " Rec Yd, ";

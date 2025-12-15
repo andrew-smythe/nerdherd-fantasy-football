@@ -26,6 +26,7 @@ export default class MatchupStats {
                 s.passingTds,
                 s.passingInts,
                 s.rushingYards,
+                s.rushingTds,
                 s.receivingYards,
                 s.receivingTds,
                 s.fumbles,
